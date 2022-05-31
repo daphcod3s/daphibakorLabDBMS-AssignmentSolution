@@ -1,0 +1,40 @@
+<!---- 3. Display the total number of customers based on gender who have placed orders of worth at least Rs.3000. ----!>  
+
+SELECT count(*) FROM cutomers 
+Inner JOIN order on cutomers.CUS_ID=order.CUS_ID 
+where order.ORD_AMOUNT<=3000 and cutomers.CUS_GENDER is not null;
+
+<!---- 4. Display all the orders along with product name ordered by a customer having Customer_Id=2 ----!>  
+
+
+
+
+
+<!---- 5. Display the Supplier details who can supply more than one product. ----!>  
+
+SELECT s.SUPP_ID, s.SUPP_NAME, s.SUPP_CITY,s.SUPP_PHONE FROM supplier as s 
+Inner Join supplier_pricing sp on  s.SUPP_ID =sp.SUPP_ID
+WHERE sp.PRO_ID>1
+
+<!---- 6. Find the least expensive product from each category and print the table with category id, name, product name and price of the product. ----!>  
+
+
+
+
+
+
+<!---- 7. Display the Id and Name of the Product ordered after “2021-10-05”.----!>
+
+SELECT product.PRO_ID, product.PRO_NAME FROM order
+INNER JOIN supplier_pricing on order.PRICING_ID=supplier_pricing.PRICING_ID
+INNER JOIN product on supplier_pricing.PRO_ID=product.PRO_ID
+where order.ORD_DATE >='2021-10-05';
+
+<!---- 8. Display customer name and gender whose names start or end with character 'A'.----!>
+
+SELECT CUS_NAME, CUS_GENDER FROM cutomers where CUS_NAME like '%A%';
+
+<!---- 9. Create a stored procedure to display supplier id, name, rating and Type_of_Service. ----!>
+
+
+
