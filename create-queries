@@ -29,7 +29,7 @@ CREATE TABLE IF NOT EXISTS public.product
 (
     "PRO_ID" integer NOT NULL,
     "PRO_NAME" character varying(20) NOT NULL,
-    "PRO_DESC" character varying(30),
+    "PRO_DESC" character varying(60),
     "CAT_ID" integer,
     CONSTRAINT product_key PRIMARY KEY ("PRO_ID"),
     CONSTRAINT category_fk FOREIGN KEY ("CAT_ID")
