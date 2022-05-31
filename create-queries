@@ -1,0 +1,75 @@
+CREATE TABLE IF NOT EXISTS public.supplier
+(
+    "SUPP_ID" integer NOT NULL,
+    "SUPP_NAME" character varying(50) NOT NULL,
+    "SUPP_CITY" character varying(50) NOT NULL,
+    "SUPP_PHONE" character varying(50) NOT NULL,
+    CONSTRAINT supplier_pkey PRIMARY KEY ("SUPP_ID")
+)
+
+CREATE TABLE IF NOT EXISTS public.cutomers
+(
+    "CUS_ID" integer NOT NULL,
+    "CUS_NAME" character varying(50) NOT NULL,
+    "CUS_PHONE" character varying(10) NOT NULL,
+    "CUS_CITY" character varying(30) NOT NULL,
+    "CUS_GENDER" character(12),
+    CONSTRAINT cutomers_pkey PRIMARY KEY ("CUS_ID")
+)
+
+
+CREATE TABLE IF NOT EXISTS public.category
+(
+    "CAT_ID" integer NOT NULL,
+    "CAT_NAME" character varying(20) NOT NULL,
+    CONSTRAINT category_pkey PRIMARY KEY ("CAT_ID")
+)
+
+CREATE TABLE IF NOT EXISTS public.product
+(
+    "PRO_ID" integer NOT NULL,
+    "PRO_NAME" character varying(20) NOT NULL,
+    "PRO_DESC" character varying(30),
+    "CAT_ID" integer,
+    CONSTRAINT product_key PRIMARY KEY ("PRO_ID"),
+    CONSTRAINT category_fk FOREIGN KEY ("CAT_ID")
+     REFERENCES public.category ("CAT_ID")
+)
+
+
+CREATE TABLE IF NOT EXISTS public.supplier_pricing
+(
+    "PRICING_ID" integer NOT NULL,
+    "PRO_ID" integer NOT NULL,
+    "SUPP_ID" integer NOT NULL,
+    "SUPP_PRICE" integer,
+    CONSTRAINT supplier_pricing_pkey PRIMARY KEY ("PRICING_ID"),
+    CONSTRAINT product_fk FOREIGN KEY ("PRO_ID")
+        REFERENCES public.product ("PRO_ID"),
+    CONSTRAINT supplier_fk FOREIGN KEY ("SUPP_ID")
+        REFERENCES public.supplier ("SUPP_ID")
+)
+
+CREATE TABLE IF NOT EXISTS public."order"
+(
+    "ORD_ID" integer NOT NULL,
+    "ORD_AMOUNT" integer NOT NULL,
+    "ORD_DATE" date NOT NULL,
+    "CUS_ID" integer,
+    "PRICING_ID" integer,
+    CONSTRAINT order_pkey PRIMARY KEY ("ORD_ID"),
+    CONSTRAINT customer_fk FOREIGN KEY ("CUS_ID")
+        REFERENCES public.cutomers ("CUS_ID"),
+    CONSTRAINT supplier_pricing_fk FOREIGN KEY ("PRICING_ID")
+        REFERENCES public.supplier_pricing ("PRICING_ID")
+)
+
+CREATE TABLE IF NOT EXISTS public.rating
+(
+    "RAT_ID" integer NOT NULL,
+    "ORD_ID" integer NOT NULL,
+    "RAT_RATSTARS" integer NOT NULL,
+    CONSTRAINT rating_pkey PRIMARY KEY ("RAT_ID"),
+    CONSTRAINT order_fk FOREIGN KEY ("ORD_ID")
+        REFERENCES public."order" ("ORD_ID")
+)
