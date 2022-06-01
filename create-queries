@@ -1,75 +1,79 @@
-CREATE TABLE IF NOT EXISTS public.supplier
-(
-    "SUPP_ID" integer NOT NULL,
-    "SUPP_NAME" character varying(50) NOT NULL,
-    "SUPP_CITY" character varying(50) NOT NULL,
-    "SUPP_PHONE" character varying(50) NOT NULL,
-    CONSTRAINT supplier_pkey PRIMARY KEY ("SUPP_ID")
-)
+CREATE DATABASE ecommerce;
 
-CREATE TABLE IF NOT EXISTS public.cutomers
-(
-    "CUS_ID" integer NOT NULL,
-    "CUS_NAME" character varying(50) NOT NULL,
-    "CUS_PHONE" character varying(10) NOT NULL,
-    "CUS_CITY" character varying(30) NOT NULL,
-    "CUS_GENDER" character(12),
-    CONSTRAINT cutomers_pkey PRIMARY KEY ("CUS_ID")
-)
+CREATE TABLE ecommerce.supplier (
+  SUPP_ID INT NOT NULL,
+  SUPP_NAME VARCHAR(50) NOT NULL,
+  SUPP_CITY VARCHAR(50) NOT NULL,
+  SUPP_PHONE VARCHAR(50) NOT NULL,
+  PRIMARY KEY (SUPP_ID));
+  
+  CREATE TABLE ecommerce.cutomers (
+  CUS_ID INT NOT NULL,
+  CUS_NAME VARCHAR(50) NOT NULL,
+  CUS_PHONE VARCHAR(10) NOT NULL,
+  CUS_CITY VARCHAR(30) NOT NULL,
+  CUS_GENDER CHAR(12) NOT NULL,
+  PRIMARY KEY (CUS_ID));
+  
+  CREATE TABLE ecommerce.category (
+  CAT_ID INT NOT NULL,
+  CAT_NAME VARCHAR(20) NOT NULL,
+  PRIMARY KEY (CAT_ID));
 
+  CREATE TABLE ecommerce.product(
+  PRO_ID INT NOT NULL,
+  PRO_NAME VARCHAR(20) NULL,
+  PRO_DESC VARCHAR(60) NULL,
+  CAT_ID INT NULL,
+  PRIMARY KEY (PRO_ID),
+  CONSTRAINT CAT_ID
+    FOREIGN KEY (CAT_ID)
+    REFERENCES ecommerce.category (CAT_ID)
+    ON DELETE CASCADE
+    ON UPDATE CASCADE);
+    
+CREATE TABLE ecommerce.supplier_pricing (
+  PRICING_ID INT NOT NULL,
+  PRO_ID INT NOT NULL,
+  SUPP_ID INT NOT NULL,
+  SUPP_PRICE INT NOT NULL,
+  PRIMARY KEY (PRICING_ID),
+  CONSTRAINT PRO_ID
+    FOREIGN KEY (PRO_ID)
+    REFERENCES ecommerce.product (PRO_ID)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT SUPP_ID
+    FOREIGN KEY (SUPP_ID)
+    REFERENCES ecommerce.supplier (SUPP_ID)
+    ON DELETE CASCADE
+    ON UPDATE CASCADE);   
+    
+CREATE TABLE ecommerce.order (
+  ORD_ID INT NOT NULL,
+  ORD_AMOUNT INT NOT NULL,
+  ORD_DATE DATE NOT NULL,
+  CUS_ID INT NOT NULL,
+  PRICING_ID INT NOT NULL,
+  PRIMARY KEY (ORD_ID),
+  CONSTRAINT CUS_ID
+    FOREIGN KEY (PRICING_ID)
+    REFERENCES ecommerce.cutomers (CUS_ID)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT PRICING_ID
+    FOREIGN KEY (PRICING_ID)
+    REFERENCES ecommerce.supplier_pricing (PRICING_ID)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION);
 
-CREATE TABLE IF NOT EXISTS public.category
-(
-    "CAT_ID" integer NOT NULL,
-    "CAT_NAME" character varying(20) NOT NULL,
-    CONSTRAINT category_pkey PRIMARY KEY ("CAT_ID")
-)
-
-CREATE TABLE IF NOT EXISTS public.product
-(
-    "PRO_ID" integer NOT NULL,
-    "PRO_NAME" character varying(20) NOT NULL,
-    "PRO_DESC" character varying(60),
-    "CAT_ID" integer,
-    CONSTRAINT product_key PRIMARY KEY ("PRO_ID"),
-    CONSTRAINT category_fk FOREIGN KEY ("CAT_ID")
-     REFERENCES public.category ("CAT_ID")
-)
-
-
-CREATE TABLE IF NOT EXISTS public.supplier_pricing
-(
-    "PRICING_ID" integer NOT NULL,
-    "PRO_ID" integer NOT NULL,
-    "SUPP_ID" integer NOT NULL,
-    "SUPP_PRICE" integer,
-    CONSTRAINT supplier_pricing_pkey PRIMARY KEY ("PRICING_ID"),
-    CONSTRAINT product_fk FOREIGN KEY ("PRO_ID")
-        REFERENCES public.product ("PRO_ID"),
-    CONSTRAINT supplier_fk FOREIGN KEY ("SUPP_ID")
-        REFERENCES public.supplier ("SUPP_ID")
-)
-
-CREATE TABLE IF NOT EXISTS public."order"
-(
-    "ORD_ID" integer NOT NULL,
-    "ORD_AMOUNT" integer NOT NULL,
-    "ORD_DATE" date NOT NULL,
-    "CUS_ID" integer,
-    "PRICING_ID" integer,
-    CONSTRAINT order_pkey PRIMARY KEY ("ORD_ID"),
-    CONSTRAINT customer_fk FOREIGN KEY ("CUS_ID")
-        REFERENCES public.cutomers ("CUS_ID"),
-    CONSTRAINT supplier_pricing_fk FOREIGN KEY ("PRICING_ID")
-        REFERENCES public.supplier_pricing ("PRICING_ID")
-)
-
-CREATE TABLE IF NOT EXISTS public.rating
-(
-    "RAT_ID" integer NOT NULL,
-    "ORD_ID" integer NOT NULL,
-    "RAT_RATSTARS" integer NOT NULL,
-    CONSTRAINT rating_pkey PRIMARY KEY ("RAT_ID"),
-    CONSTRAINT order_fk FOREIGN KEY ("ORD_ID")
-        REFERENCES public."order" ("ORD_ID")
-)
+CREATE TABLE ecommerce.rating (
+  RAT_ID INT NOT NULL,
+  ORD_ID INT NOT NULL,
+  RAT_RATSTARS INT NOT NULL,
+  PRIMARY KEY (RAT_ID),
+  CONSTRAINT ORD_ID
+    FOREIGN KEY (ORD_ID)
+    REFERENCES ecommerce.order (ORD_ID)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION);
