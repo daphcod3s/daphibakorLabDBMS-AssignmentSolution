@@ -1,10 +1,12 @@
-<!---- 3. Display the total number of customers based on gender who have placed orders of worth at least Rs.3000. ----!>  
+-- 3. Display the total number of customers based on gender who have placed orders of worth at least Rs.3000.
+-- 
+	SELECT c.cus_gender, COUNT(c.cus_id)
+	FROM ecommerce.cutomers c
+	JOIN ecommerce.order o on c.cus_id=o.cus_id 
+	WHERE o.ord_amount<=3000 
+    GROUP BY (c.cus_gender)
 
-SELECT count(*) FROM cutomers 
-Inner JOIN order on cutomers.CUS_ID=order.CUS_ID 
-where order.ORD_AMOUNT<=3000 and cutomers.CUS_GENDER is not null;
-
-<!---- 4. Display all the orders along with product name ordered by a customer having Customer_Id=2 ----!>  
+-- 4. Display all the orders along with product name ordered by a customer having Customer_Id=2 
 
 
 
